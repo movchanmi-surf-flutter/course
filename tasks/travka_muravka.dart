@@ -1,3 +1,4 @@
+///Для запуска программы и проверки значений
 void main() {
   final machineries = _getMachineries(maps: [mapBefore2010, mapAfter2010]);
   for (final m in machineries) print(m.toJson());
@@ -12,30 +13,27 @@ List<AgriculturalMachinery> _getMachineries(
   Set<AgriculturalMachinery> machines = {};
 
   for (final map in maps)
-    map.forEach((country, territories) {
-      for (final territory in territories)
-        machines.addAll(territory.machineries);
-    });
+      for (final territories in map.values)
+        for(final territory in territories)
+          machines.addAll(territory.machineries);
   final uniqueList = List<AgriculturalMachinery>.from(machines);
   uniqueList.sort((a, b) => a.releaseDate.compareTo(b.releaseDate));
   return uniqueList;
 }
+
 ///Расчет среднего возраста самой старой техники
 int _averageAge({required List<AgriculturalMachinery> machines}) {
   final halfLength = machines.length ~/ 2;
   if (halfLength != 0) {
-    return _countAgeSum(
-            ages: machines.toList().getRange(0, halfLength).toList()) ~/
-        halfLength;
+    final preparedListMachines = machines.reversed.skip(halfLength).toList();
+    print(preparedListMachines.length);
+    final ageList = List.generate(preparedListMachines.length,
+        (index) => preparedListMachines[index].releaseDate.year);
+    return ageList.reduce((value, element) => value + element) ~/
+        preparedListMachines.length;
   } else {
     return 0;
   }
-}
-///Подсчет суммы старой техники (доля 50% от всей техники)
-int _countAgeSum({required List<AgriculturalMachinery> ages}) {
-  int sum = 0;
-  for (final age in ages) sum += age.releaseDate.year;
-  return sum;
 }
 
 final mapBefore2010 = <Countries, List<Territory>>{
