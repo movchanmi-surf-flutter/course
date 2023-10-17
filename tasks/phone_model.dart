@@ -16,9 +16,9 @@ class Phone {
 
   final Camera? camera;
 
-  void call({required String phone}) => print('Звоним по номеру $phone');
+  static void call({required String phone}) => print('Звоним по номеру $phone');
 
-  Phone template() =>
+  static Phone template() =>
       Phone(model: 'iPhone', os: OS.iOS, imei: '212323232', diskSize: 512);
 }
 
